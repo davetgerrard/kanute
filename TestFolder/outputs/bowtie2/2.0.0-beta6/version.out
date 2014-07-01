@@ -1,0 +1,7 @@
+/opt/gridware/apps/bowtie2/2.0.0-beta6/bowtie2-align version 2.0.0-beta6
+64-bit
+Built on sycamore.umiacs.umd.edu
+Mon May  7 21:29:35 EDT 2012
+Compiler: gcc version 4.1.2 20080704 (Red Hat 4.1.2-48)
+Options: -O3 -m64 -msse2 -funroll-loops -g3 
+Sizeof {int, long, long long, void*, size_t, off_t}: {4, 8, 8, 8, 8, 8}

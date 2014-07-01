@@ -1,0 +1,7 @@
+/opt/gridware/apps/bowtie2/2.2.0/bowtie2-align-s version 2.2.0
+64-bit
+Built on igm2
+Mon Feb 10 11:25:04 EST 2014
+Compiler: gcc version 4.5.4 (GCC) 
+Options: -O3 -m64 -msse2  -funroll-loops -g3 -DPOPCNT_CAPABILITY
+Sizeof {int, long, long long, void*, size_t, off_t}: {4, 8, 8, 8, 8, 8}

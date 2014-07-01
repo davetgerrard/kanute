@@ -1,3 +1,4 @@
+ source /usr/share/Modules/init/bash	# to use module load within the scirpt
 # map a single read to a simple genome using bowtie2
 # expect only one mapping
 # as bowtie output contains version information in headers, need to post-prcoess using 'samtools view' to get just the mapping.
