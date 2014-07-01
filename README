@@ -42,4 +42,4 @@
 #
 # CURRENT
 # set/export local environment variable to be used in test_scripts, e.g. 
-export kanute_dir=/mnt/fls01-home01/mqbssdgb/scratch/kanute/TestFolder
+export kanute_dir=$SCRATCH/kanute/TestFolder
