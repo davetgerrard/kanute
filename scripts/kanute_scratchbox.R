@@ -41,4 +41,115 @@
 # allow arbitrary folder depth for test results and lists of outputs directories (with some naming), so that equivalent folders can be compared across systems (e.g. server-1 vs. server-2).
 
 
+########### Reading testing results produced elsewhere (no local testing, only comparison).
+
+testingFolder <- "C:/Users/Dave/HalfStarted/Kanute/TestFolder"
+
+
+name <- "bowtie2"
+testDir <- paste(testingFolder, "tests", name,sep="/")
+outputsDir <- paste(testingFolder, "outputs", name,sep="/")
+
+versions.file <- paste(testDir, paste(name, "versions", sep="."),sep="/")
+versions.info <- read.delim(versions.file, header=F)
+
+tests <- dir(testDir, pattern="test.sh")
+# using filenames should ensure unique names for tests (?)
+
+
+## try to find expected output from test files.
+# in bash, should use the TEST_OUT_NAME variable.
+outputs <- character()
+for(thisTest in tests)  {
+    fileLines <- scan(paste(testDir, thisTest, sep="/"), what="character")
+    outLine <- grep("TEST_OUT_NAME=", fileLines, value=T)
+    outFile <- unlist(strsplit(outLine, '='))[2]
+    outFile <- gsub("'", "", outFile) # remove quotes from ends if there
+    outputs[thisTest] <- outFile
+}
+
+
+# probably should define some list structure to hold tests
+
+
+thisTest <- tests[1]
+thisTest <- tests[2]
+
+
+refVersion <- "2.2.3"
+thisVersion <- "2.2.0"
+
+thisName <- name
+
+refOutDir <- paste(outputsDir,  refVersion, sep="/")
+thisOutDir <- paste(outputsDir,  thisVersion, sep="/")
+
+refOutFile <- paste(refOutDir,  outputs[thisTest], sep="/")
+thisOutFile <- paste(thisOutDir, outputs[thisTest], sep="/")
+
+md5.call <- paste("md5sum", refOutFile) 
+ref.md5 <- try(system(md5.call, intern=T, ignore.stderr = TRUE))
+md5.call <- paste("md5sum", thisOutFile) 
+this.md5 <- try(system(md5.call, intern=T, ignore.stderr = TRUE))
+
+
+compileTestResults <- function(names, versions, tests, outputsDir)  {
+    result.list <- list()
+    thisName <- names[1]  # expand later to multi-tests
+    
+    for(thisVersion in versions)  {
+        result.list[[thisVersion]] <- list()
+        thisOutDir <- paste(outputsDir,  thisVersion, sep="/")
+        for(thisTest in tests)  {
+            
+            thisOutFile <- paste(thisOutDir, outputs[thisTest], sep="/")
+            md5.call <- paste("md5sum", thisOutFile) 
+            this.md5 <- try(system(md5.call, intern=T, ignore.stderr = TRUE))
+            result.list[[thisVersion]][[thisTest]] <- unlist(strsplit(this.md5, ' '))[1]
+        }
+    }   
+    return(result.list)
+}
+
+
+
+test.library <- compileTestResults(names="bowtie2", versions=as.character(versions.info[,1]), tests=tests, outputsDir=outputsDir)
+
+
+
+
+# could write generic function that take result from above as argument or that can accept all the data and run the above too.
+# Current version take library of test results from compileTestResults()
+compareTests <- function(test.library, versions=as.character(versions.info[,1]), tests, ref.version=versions[1])  {
+    # test each versions results against the reference
+    print(ref.version)
+    # compile a table/matrix with test names in first column (can't always use row.names)
+    # and remaining columns for different versions.
+    results <- data.frame(test=tests)
+    for(thisVersion in versions)  {
+        versionVec <- logical()
+        for(thisTest in tests)  {
+            versionVec[thisTest] <- test.library[[thisVersion]][[thisTest]]  == test.library[[ref.version]][[thisTest]]
+            
+        }
+        results[,thisVersion] <- versionVec
+        # need to speed this up
+    }
+    
+    return(results)
+    
+}
+
+
+test.results <- compareTests(test.library, versions=as.character(versions.info[,1]), tests)
+
+
+
+
+
+
+
+
+
+
 
