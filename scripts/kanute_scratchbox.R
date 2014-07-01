@@ -37,3 +37,8 @@
 
 # Test comparison is pairwise. If multiple versions, user selects a reference (e.g. most recent) or first listed is taken. 
 # Perhaps give list of versions to consider in tests or outputs folders.
+
+# allow arbitrary folder depth for test results and lists of outputs directories (with some naming), so that equivalent folders can be compared across systems (e.g. server-1 vs. server-2).
+
+
+
