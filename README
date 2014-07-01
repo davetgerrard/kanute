@@ -1,0 +1,41 @@
+
+### KANUTE -  unit-style behaviour testing for softwares and software versions.
+
+
+# Test functionality of software as per unit tests.
+# Compare functionality between versions of same software.
+# Compare functionality between different software (given mapping of functionality).
+
+
+# testFolder/inputs   small units of test data
+# testFolder/outputs    # results from tests, stored in sub-directories by software, then version.
+# testFolder/tests      # scripts defining inputs -> outputs. Enough post-processing to give consistent output (e.g. sorting, filenames?).
+# testFolder/func_maps  # lists linking tests performed in one software/version with another software/version.
+
+# Allow for 'generic' tests where different versions of the same software should be able to run the same test and produce the same output but 
+
+# This is NOT performance benchmarking.
+# This is to check for consistency in results e.g. PASS/FAIL for comparison of different versions of software or between different software applied to the same inputs.
+
+
+# Allows users to run new results for all tests or only a subset (might be useful if tests are slow or if worried that testing framework may become broken.). 
+
+# Allow users to manually add in custom outputs so they can test software against results generated on another system. 
+# This software should be able to run the tests, but also just compile results based on pre-run outputs. (separate run-tests from report-tests)
+
+#MD5SUM for file comparison? Do filenames matter?
+
+# Ideally, folder stucture and run-tests framework should NOT be R specific, could write port for python etc. But test scripts should work on current OS using system.calls.
+# Report-tests then written in R, python (bash?) etc.
+
+# make one of the generic tests a --version call - this should always fail to give same results between software versions.
+
+# PROBLEM: how to know if a test has been properly run and output freshly generated?  make?
+
+
+# Allow self-tests, whereby new-results are compared with old results.  Does this require an archive? Or just make a copy of the software-version directory.
+
+# Test comparison is pairwise. If multiple versions, user selects a reference (e.g. most recent) or first listed is taken. 
+# Perhaps give list of versions to consider in tests or outputs folders.
+
+# allow arbitrary folder depth for test results and lists of outputs directories (with some naming), so that equivalent folders can be compared across systems (e.g. server-1 vs. server-2).
