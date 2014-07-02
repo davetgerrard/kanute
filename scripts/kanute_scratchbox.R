@@ -145,7 +145,11 @@ test.results <- compareTests(test.library, versions=as.character(versions.info[,
 
 
 
-
+# TODO: combine/compare tests across softwares (e.g. TopHat vs STAR)
+#   requires test/function mapping
+#  e.g. tophat_alignSimplePair.test  vs STAR_alignSimplePair.test.
+#  Tests need to be properly set up so that they produce same output (sorted reads, no random-ness). 
+#  Could do with a facility to test if a single test produces consistent results across numerous runs.
 
 
 
