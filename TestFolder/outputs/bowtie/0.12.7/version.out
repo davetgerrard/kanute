@@ -1,0 +1,7 @@
+/opt/gridware/apps/bowtie/0.12.7/bowtie version 0.12.7
+64-bit
+Built on sycamore.umiacs.umd.edu
+Tue Sep  7 17:19:06 EDT 2010
+Compiler: gcc version 4.1.2 20080704 (Red Hat 4.1.2-48)
+Options: -O3 -m64  -Wl,--hash-style=both  
+Sizeof {int, long, long long, void*, size_t, off_t}: {4, 8, 8, 8, 8, 8}

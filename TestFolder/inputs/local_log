@@ -1,0 +1,2 @@
+module load apps/bowtie/1.0.1
+bowtie-build tinyGenome.fa tinyGenome
