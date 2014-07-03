@@ -150,6 +150,9 @@ test.results <- compareTests(test.library, versions=as.character(versions.info[,
 #  e.g. tophat_alignSimplePair.test  vs STAR_alignSimplePair.test.
 #  Tests need to be properly set up so that they produce same output (sorted reads, no random-ness). 
 #  Could do with a facility to test if a single test produces consistent results across numerous runs.
+# simpler starter example may be bowtie vs bowtie 2
+
+
 
 
 
