@@ -47,7 +47,8 @@ testingFolder <- "C:/Users/Dave/HalfStarted/Kanute/TestFolder"
 
 
 name <- "bowtie2"
-testDir <- paste(testingFolder, "tests", name,sep="/")
+testDirTop <- paste(testingFolder, "tests",sep="/")
+testDir <- paste(testDirTop, name,sep="/")
 outputsDir <- paste(testingFolder, "outputs", name,sep="/")
 
 versions.file <- paste(testDir, paste(name, "versions", sep="."),sep="/")
@@ -153,7 +154,13 @@ test.results <- compareTests(test.library, versions=as.character(versions.info[,
 # simpler starter example may be bowtie vs bowtie 2
 
 
+# created a tab-delim file called test.mappings in top of tests/ folder
+# software1 software1.testA software2   software2.testA TRUE
+# the fifth column is TRUE if expect results to be the same, FALSE if not or NA if unknown.
+# May need to be 1/0 instead of TRUE/FALSE
 
+test.mappings <- read.delim(paste(testDirTop, "test.mappings", sep="/"), header=F)
+names(test.mappings) <- c("software1", "software1.test", "software2", "software2.test", "expectIdentical")
 
 
 
