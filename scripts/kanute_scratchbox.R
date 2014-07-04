@@ -41,15 +41,59 @@
 # allow arbitrary folder depth for test results and lists of outputs directories (with some naming), so that equivalent folders can be compared across systems (e.g. server-1 vs. server-2).
 
 
+
+
+#####################################
+
+# Folder and test set-up
+
+# Folders for each software follow the same format
+# single test creates a single output file.
+# Software version list given in <software>.versions file 
+# Where specific versions are not given, put test results in a folder 'current'
+
+
+
+
 ########### Reading testing results produced elsewhere (no local testing, only comparison).
 
 testingFolder <- "C:/Users/Dave/HalfStarted/Kanute/TestFolder"
+testDirTop <- paste(testingFolder, "tests",sep="/")
+outputsDirTop <- paste(testingFolder, "outputs",sep="/")
+source('C:/Users/Dave/HalfStarted/Kanute/scripts/kanute_funcs.R')
+
+
+
+
+softwares <- c("bowtie", "bowtie2")
+
+testing.list <- scanTestDir(softwares=softwares, testDirTop=testDirTop)
+
+
+
+test.library <- compileTestResults(testing.list, outputsDirTop)
+
+
+
+
+
+## TODO update compareTests to deal with list output from compileTestResults()  see far below ..
+
+
+
+
+
+stopifnot(FALSE)
+
+
+
 
 
 name <- "bowtie2"
 testDirTop <- paste(testingFolder, "tests",sep="/")
 testDir <- paste(testDirTop, name,sep="/")
-outputsDir <- paste(testingFolder, "outputs", name,sep="/")
+outputsDirTop <- paste(testingFolder, "outputs",sep="/")
+outputsDir <- paste(outputsDirTop, name,sep="/")
 
 versions.file <- paste(testDir, paste(name, "versions", sep="."),sep="/")
 versions.info <- read.delim(versions.file, header=F)
@@ -58,17 +102,10 @@ tests <- dir(testDir, pattern="test.sh")
 # using filenames should ensure unique names for tests (?)
 
 
-## try to find expected output from test files.
-# in bash, should use the TEST_OUT_NAME variable.
-outputs <- character()
-for(thisTest in tests)  {
-    fileLines <- scan(paste(testDir, thisTest, sep="/"), what="character")
-    outLine <- grep("TEST_OUT_NAME=", fileLines, value=T)
-    outFile <- unlist(strsplit(outLine, '='))[2]
-    outFile <- gsub("'", "", outFile) # remove quotes from ends if there
-    outputs[thisTest] <- outFile
-}
 
+
+
+outputs <- findTestOutputs(testDir)
 
 # probably should define some list structure to hold tests
 
@@ -94,27 +131,7 @@ md5.call <- paste("md5sum", thisOutFile)
 this.md5 <- try(system(md5.call, intern=T, ignore.stderr = TRUE))
 
 
-compileTestResults <- function(names, versions, tests, outputsDir)  {
-    result.list <- list()
-    thisName <- names[1]  # expand later to multi-tests
-    
-    for(thisVersion in versions)  {
-        result.list[[thisVersion]] <- list()
-        thisOutDir <- paste(outputsDir,  thisVersion, sep="/")
-        for(thisTest in tests)  {
-            
-            thisOutFile <- paste(thisOutDir, outputs[thisTest], sep="/")
-            md5.call <- paste("md5sum", thisOutFile) 
-            this.md5 <- try(system(md5.call, intern=T, ignore.stderr = TRUE))
-            result.list[[thisVersion]][[thisTest]] <- unlist(strsplit(this.md5, ' '))[1]
-        }
-    }   
-    return(result.list)
-}
-
-
-
-test.library <- compileTestResults(names="bowtie2", versions=as.character(versions.info[,1]), tests=tests, outputsDir=outputsDir)
+#test.library <- compileTestResults(names="bowtie2", versions=as.character(versions.info[,1]), tests=tests, outputsDir=outputsDir)
 
 
 
@@ -159,11 +176,43 @@ test.results <- compareTests(test.library, versions=as.character(versions.info[,
 # the fifth column is TRUE if expect results to be the same, FALSE if not or NA if unknown.
 # May need to be 1/0 instead of TRUE/FALSE
 
-test.mappings <- read.delim(paste(testDirTop, "test.mappings", sep="/"), header=F)
+test.mappings <- read.delim(paste(testDirTop, "test.mappings", sep="/"), header=F, stringsAsFactors=F)
 names(test.mappings) <- c("software1", "software1.test", "software2", "software2.test", "expectIdentical")
 
 
+# for each software-test, need to collate test info as above
+#   What are the expected output files?
+#   Are the files available?   (option to re-run tests?)
+#   How to deal with versions (or lack thereof)?
 
+outputs.bowtie <- findTestOutputs(paste(testDirTop, "bowtie",sep="/"))
+outputs.bowtie2 <- findTestOutputs(paste(testDirTop, "bowtie2",sep="/"))
 
+versions.bowtie <- "1.0.1"
+versions.bowtie2 <- "2.2.3"
+
+test.library.bowtie <- compileTestResults(names="bowtie", versions=versions.bowtie , outputs=outputs.bowtie, outputsDir=paste(outputsDirTop, "bowtie",sep="/"))
+test.library.bowtie2 <- compileTestResults(names="bowtie2", versions=versions.bowtie2, outputs=outputs.bowtie2, outputsDir=paste(outputsDirTop, "bowtie2",sep="/"))
+
+names(test.library.bowtie)  #versions
+names(test.library.bowtie2)  #versions
+
+#TODO re-write compareTests to either take two libraries, or a single library containing multiple software tests 
+#       PLUS the list of test mappings between softwares.
+# A single library would be best
+# [[library]][[software]][[version]][[test]]
+
+version.1 <- "1.0.1"
+version.2 <- "2.2.3"
+
+for(i in 1:nrow(test.mappings))  {
+    soft.1 <- test.mappings[i,'software1']
+    soft.2 <- test.mappings[i,'software2']
+    test.1 <- test.mappings[i,'software1.test']
+    test.2 <- test.mappings[i,'software2.test']    
+    expect <- test.mappings[i,'expectIdentical']   
+    print(paste(test.1, " vs", test.2))
+    print(paste(  "Expect:", expect, "Result:" ,     test.library[[soft.1]][[version.1]][[test.1]]  == test.library[[soft.2]][[version.2]][[test.2]] ))
+}
 
 
