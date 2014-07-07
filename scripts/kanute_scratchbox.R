@@ -78,18 +78,27 @@ test.library <- compileTestResults(testing.list, outputsDirTop)
 test.results <- compareTests(test.library)
 
 # created a tab-delim file called test.mappings in top of tests/ folder
-# software1 software1.testA software2   software2.testA TRUE
-# the fifth column is TRUE if expect results to be the same, FALSE if not or NA if unknown.
+# mapping.name software1 software1.testA software2   software2.testA TRUE
+# the final column is TRUE if expect results to be the same, FALSE if not or NA if unknown.
 # May need to be 1/0 instead of TRUE/FALSE
 
 test.mappings <- read.delim(paste(testDirTop, "test.mappings", sep="/"), header=F, stringsAsFactors=F)
-names(test.mappings) <- c("software1", "software1.test", "software2", "software2.test", "expectIdentical")
+names(test.mappings) <- c("mapping.name", "software1", "software1.test", "software2", "software2.test", "expectIdentical")
 
 
 
-test.results <- compareTests(test.library, versions=as.character(versions.info[,1]), tests)
+test.results <- compareTests(test.library, mapped.tests=test.mappings)
 
-## TODO update compareTests to deal with list output from compileTestResults()  see far below ..
+
+# by default, if mapped.tests parameter given, tests within Software is suppressed
+# Here's how to turn it back on
+test.results <- compareTests(test.library, mapped.tests=test.mappings, show.all.tests=TRUE)
+
+
+## specify the reference versions.
+
+
+test.results <- compareTests(test.library, mapped.tests=test.mappings, ref.versions=list(bowtie="1.0.1", bowtie2="2.2.3"))
 
 
 

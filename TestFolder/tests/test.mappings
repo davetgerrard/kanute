@@ -1,2 +1,2 @@
-bowtie	bowtie_singleRead_1.generic.test.sh	bowtie2	bowtie2_singleRead_1.generic.test.sh	FALSE
-bowtie	bowtie_singleRead_2.generic.test.sh	bowtie2	bowtie2_singleRead_2.generic.test.sh	TRUE
+singleRead_1.generic	bowtie	bowtie_singleRead_1.generic.test.sh	bowtie2	bowtie2_singleRead_1.generic.test.sh	FALSE
+singleRead_2.generic	bowtie	bowtie_singleRead_2.generic.test.sh	bowtie2	bowtie2_singleRead_2.generic.test.sh	TRUE
