@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>KANUTE - version testing between softwares and versions   <a name="Top"></a></title>
+
+
+
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<h1>KANUTE - version testing between softwares and versions   <a name="Top"></a></h1>
+
+<h1>Working notebook</h1>
+
+<h3>Dave T. Gerrard, University of Manchester</h3>
+
+<h3>Produced 2014-07-07</h3>
+
+<p><a href="http://personalpages.manchester.ac.uk/staff/David.Gerrard/">Dave&#39;s website</a></p>
+
+<h2>Table of contents</h2>
+
+<ul>
+<li><a href="#Example">Example</a></li>
+<li><a href="#"></a></li>
+<li><a href="#"></a></li>
+</ul>
+
+<pre><code>## [1] &quot;/mnt/lustre/scratch/mqbssdgb/kanute/TestFolder/reports&quot;
+</code></pre>
+
+<p><a href="#Top">Back to top</a></p>
+
+<h2><a name="Example"></a>Example</h2>
+
+<p>TODO</p>
+
+<pre><code class="r">########### Reading testing results produced elsewhere (no local testing, only comparison).
+#
+parent_dir &lt;-  paste(Sys.getenv(&quot;SCRATCH&quot;),&quot;kanute&quot;, sep=&quot;/&quot;)
+testingFolder &lt;- paste(parent_dir, &quot;TestFolder&quot;, sep=&quot;/&quot;)
+testDirTop &lt;- paste(testingFolder, &quot;tests&quot;,sep=&quot;/&quot;)
+outputsDirTop &lt;- paste(testingFolder, &quot;outputs&quot;,sep=&quot;/&quot;)
+source(paste(parent_dir, &quot;scripts/kanute_funcs.R&quot;, sep=&quot;/&quot;))
+#
+#
+#
+#
+softwares &lt;- c(&quot;bowtie&quot;, &quot;bowtie2&quot;)
+#
+testing.list &lt;- scanTestDir(softwares=softwares, testDirTop=testDirTop)
+#
+#
+#
+test.library &lt;- compileTestResults(testing.list, outputsDirTop)
+#
+#
+#
+test.results &lt;- compareTests(test.library)
+</code></pre>
+
+<pre><code>## [1] &quot;#######KANUTE###########: Comparing test results WITHIN each software&quot;
+## [1] &quot;bowtie&quot;
+## [1] &quot;Using version 0.12.7 as reference&quot;
+## [1] &quot;Processing 5 versions...&quot;
+## [1] &quot;0.12.7&quot;
+## [1] &quot;0.12.8&quot;
+## [1] &quot;0.12.9&quot;
+## [1] &quot;1.0.0&quot;
+## [1] &quot;1.0.1&quot;
+## [1] &quot;bowtie2&quot;
+## [1] &quot;Using version 2.2.3 as reference&quot;
+## [1] &quot;Processing 9 versions...&quot;
+## [1] &quot;2.2.3&quot;
+## [1] &quot;2.2.2&quot;
+## [1] &quot;2.2.1&quot;
+## [1] &quot;2.2.0&quot;
+## [1] &quot;2.1.0&quot;
+## [1] &quot;2.0.5&quot;
+## [1] &quot;2.0.2&quot;
+## [1] &quot;2.0.0-beta7&quot;
+## [1] &quot;2.0.0-beta6&quot;
+</code></pre>
+
+<pre><code class="r">#
+## created a tab-delim file called test.mappings in top of tests/ folder
+## mapping.name software1 software1.testA software2   software2.testA TRUE
+## the final column is TRUE if expect results to be the same, FALSE if not or NA if unknown.
+## May need to be 1/0 instead of TRUE/FALSE
+#
+test.mappings &lt;- read.delim(paste(testDirTop, &quot;test.mappings&quot;, sep=&quot;/&quot;), header=F, stringsAsFactors=F)
+names(test.mappings) &lt;- c(&quot;mapping.name&quot;, &quot;software1&quot;, &quot;software1.test&quot;, &quot;software2&quot;, &quot;software2.test&quot;, &quot;expectIdentical&quot;)
+#
+#
+#
+test.results &lt;- compareTests(test.library, mapped.tests=test.mappings)
+</code></pre>
+
+<pre><code>## [1] &quot;#######KANUTE###########: Comparing tests BETWEEN softwares&quot;
+## [1] &quot;2 mapped tests&quot;
+</code></pre>
+
+<pre><code class="r">#
+#
+## by default, if mapped.tests parameter given, tests within Software is suppressed
+## Here&#39;s how to turn it back on
+test.results &lt;- compareTests(test.library, mapped.tests=test.mappings, show.all.tests=TRUE)
+</code></pre>
+
+<pre><code>## [1] &quot;#######KANUTE###########: Comparing test results WITHIN each software&quot;
+## [1] &quot;bowtie&quot;
+## [1] &quot;Using version 0.12.7 as reference&quot;
+## [1] &quot;Processing 5 versions...&quot;
+## [1] &quot;0.12.7&quot;
+## [1] &quot;0.12.8&quot;
+## [1] &quot;0.12.9&quot;
+## [1] &quot;1.0.0&quot;
+## [1] &quot;1.0.1&quot;
+## [1] &quot;bowtie2&quot;
+## [1] &quot;Using version 2.2.3 as reference&quot;
+## [1] &quot;Processing 9 versions...&quot;
+## [1] &quot;2.2.3&quot;
+## [1] &quot;2.2.2&quot;
+## [1] &quot;2.2.1&quot;
+## [1] &quot;2.2.0&quot;
+## [1] &quot;2.1.0&quot;
+## [1] &quot;2.0.5&quot;
+## [1] &quot;2.0.2&quot;
+## [1] &quot;2.0.0-beta7&quot;
+## [1] &quot;2.0.0-beta6&quot;
+## [1] &quot;#######KANUTE###########: Comparing tests BETWEEN softwares&quot;
+## [1] &quot;2 mapped tests&quot;
+</code></pre>
+
+<pre><code class="r">#
+#
+### specify the reference versions to be used in tests BETWEEN software
+test.results &lt;- compareTests(test.library, mapped.tests=test.mappings, ref.versions=list(bowtie=&quot;1.0.1&quot;, bowtie2=&quot;2.2.3&quot;))
+</code></pre>
+
+<pre><code>## [1] &quot;#######KANUTE###########: Comparing tests BETWEEN softwares&quot;
+## [1] &quot;2 mapped tests&quot;
+</code></pre>
+
+<pre><code class="r">#
+#
+
+#What have we got at the end of all that
+test.results
+</code></pre>
+
+<pre><code>## $MAPPED.TESTS
+##           mapping.name software1                      software1.test software2                       software2.test expectIdentical result  ver1  ver2
+## 1 singleRead_1.generic    bowtie bowtie_singleRead_1.generic.test.sh   bowtie2 bowtie2_singleRead_1.generic.test.sh           FALSE  FALSE 1.0.1 2.2.3
+## 2 singleRead_2.generic    bowtie bowtie_singleRead_2.generic.test.sh   bowtie2 bowtie2_singleRead_2.generic.test.sh            TRUE   TRUE 1.0.1 2.2.3
+</code></pre>
+
+<p><a href="#Top">Back to top</a></p>
+
+<p><a href="#Top">Back to top</a></p>
+
+<h2><a name="Anchor_name"></a>Start of next section</h2>
+
+<p><a href="#Top">Back to top</a></p>
+
+<h2>About this file</h2>
+
+<p>Produced from an R-markdown (Rmd) file ../reports/example.Rmd . </p>
+
+<p>NOT CURRENTLYPart of an analysis pipeline controlled by &#39;make&#39; processing this <a href="../makefile">makefile</a></p>
+
+<p><a href="#Top">Back to top</a></p>
+
+<p>To compile me, run this in shell:</p>
+
+<pre><code class="shell">cd ~/HanleyGroup/BerryChIPseq_multiTissue
+make
+
+</code></pre>
+
+<p>Information about the R session:-</p>
+
+<pre><code class="r">sessionInfo()
+</code></pre>
+
+<pre><code>## R version 3.0.2 (2013-09-25)
+## Platform: x86_64-redhat-linux-gnu (64-bit)
+## 
+## locale:
+##  [1] LC_CTYPE=en_GB       LC_NUMERIC=C         LC_TIME=en_GB        LC_COLLATE=en_GB     LC_MONETARY=en_GB    LC_MESSAGES=en_GB    LC_PAPER=en_GB       LC_NAME=C            LC_ADDRESS=C         LC_TELEPHONE=C       LC_MEASUREMENT=en_GB LC_IDENTIFICATION=C 
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  base     
+## 
+## other attached packages:
+## [1] knitr_1.6    markdown_0.7
+## 
+## loaded via a namespace (and not attached):
+## [1] evaluate_0.5.5 formatR_0.10   stringr_0.6.2  tools_3.0.2
+</code></pre>
+
+</body>
+
+</html>
