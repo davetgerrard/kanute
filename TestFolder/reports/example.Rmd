@@ -1,6 +1,6 @@
-# KANUTE - version testing between softwares and versions   <a name="Top"></a> 
+# KANUTE - behaviour testing between softwares and versions   <a name="Top"></a> 
 
-# Working notebook
+# Example: Kadmon
 
 ### Dave T. Gerrard, University of Manchester
 ### Produced `r Sys.Date()`
@@ -8,12 +8,12 @@
 
 
 ## Table of contents ##
-- [Example](#Example)
-- [](#)
-- [](#)
+- [Overview](#Overview)
+- [Tests directory](#test_dir)
+- [Comparing tests example](#Example)
 ``` {r label_2, echo=FALSE}
 # What is the working directory?
-getwd()
+#getwd()
 options(width=500)
 
 ```
@@ -21,15 +21,55 @@ options(width=500)
 [Back to top](#Top)
 
 
-## <a name="Example"></a>Example ##
+# <a name="overview"></a>Overview ##
 
-TODO
+This is framework and piece of software to support:-
+- checking if a specific behaviour of a piece of software is constant between versions.
+- checking if the behaviour of one piece of software is identical to the supposed same behaviour in another piece of software.
 
+It is __not__ intended for performance benchmarking or for comparing _real world_ noisy data.
+
+The process has two parts:-
+
+1. A set of unit tests. These can be written in any language but must produce a pre-defined output. Tests and Outputs are organised in a structured testing folder/directory. Users are free to develop individual tests over a long period of time. Reports can then be run on an ad-hoc basis, using all or just a selection of test results.
+2. Software to parse the tests, their output and make comparisons between versions and between softwares. The current implementation is in R (see below) but could be ported to any language.
+
+
+
+[Back to top](#Top)
+
+
+# <a name="test_dir"></a>Tests directory ##
+
+The [testing folder](../) will contain the following sub-folders
+
+- [inputs](../inputs/)		a collection of minimal input data, used by tests to produce outputs
+- [tests](../tests/)		the individual test scripts, arranged by __software__
+- [outputs](../outputs/)	the individual test results, arranged by __software__ then _version_
+- [reports](../reports/)	an optional directory containing reports (like this one)    
+
+
+The software sub-folders within tests/ should contain a file called SOFTWARE.versions listing the version IDs. This is also a good place to list full paths to executable for each version, if so, the file should be tab delimited. Example: [bowtie.versions](../tests/bowtie/bowtie.versions)
+
+The individual test scripts should specify the name of the output file they generate. Currently, the KANUTE package can detect these in bash scripts if they are assigned to the _TEST_OUT_NAME_ variable.
+
+
+
+[Back to top](#Top)
+
+
+# <a name="Example"></a>Comparing tests example ##
+
+Running the tests is kept separate from comparing the results between different versions or software.
+
+The test comparisons have initially been implemented in R and make use of the md5sum program.
+
+The user begins by giving the directory where the tests are stored and defining a subset of software names and version that they are interested in. The following workflow is in R 
 
 
 ```{r}
 
-########### Reading testing results produced elsewhere (no local testing, only comparison).
+########### Reading testing results produced earlier (no execution, only comparison).
 #
 parent_dir <-  paste(Sys.getenv("SCRATCH"),"kanute", sep="/")
 testingFolder <- paste(parent_dir, "TestFolder", sep="/")
@@ -38,20 +78,52 @@ outputsDirTop <- paste(testingFolder, "outputs",sep="/")
 source(paste(parent_dir, "scripts/kanute_funcs.R", sep="/"))
 #
 #
-#
-#
 softwares <- c("bowtie", "bowtie2")
+```
+
+There is a function _scanTestDir()_ to got through the directory and pick out softwares, versions and tests. This produces a list object.
+
+```{r}
+
+
 #
 testing.list <- scanTestDir(softwares=softwares, testDirTop=testDirTop)
+testing.list
 #
-#
+
+```
+
+Using the result of _scanTestDir_ the user can then get md5sum CHECKSUM values for every test with a result file. Again this produces another list.
+
+
+```{r}
+
+
 #
 test.library <- compileTestResults(testing.list, outputsDirTop)
+#test.library   # don't show this, it's a big hier-archichal list of md5sums
 #
 #
-#
+
+
+```
+
+The above list has all the information to check whether any two tests produced the same input, or not. The default behaviour of _compareTests_ is to check for concordance between version __within__ one piece of software.
+
+```{r}
+
 test.results <- compareTests(test.library)
+test.results
 #
+
+```
+
+An important feature of KANUTE is to test for differences in results __between__ different softwares. This depends on the user having written tests that produce comparable results. The user must then also provide a table of mappings between specific tests performed on two different softares. Here is an example [file](../tests/test.mappings) 
+
+
+```{r}
+
+
 ## created a tab-delim file called test.mappings in top of tests/ folder
 ## mapping.name software1 software1.testA software2   software2.testA TRUE
 ## the final column is TRUE if expect results to be the same, FALSE if not or NA if unknown.
@@ -59,22 +131,30 @@ test.results <- compareTests(test.library)
 #
 test.mappings <- read.delim(paste(testDirTop, "test.mappings", sep="/"), header=F, stringsAsFactors=F)
 names(test.mappings) <- c("mapping.name", "software1", "software1.test", "software2", "software2.test", "expectIdentical")
-#
-#
-#
+test.mappings
+
+
+```
+
+Then, giving this _data.frame_ to _compareTests_ will make a comparison BETWEEN softwares.
+
+```{r}
+
 test.results <- compareTests(test.library, mapped.tests=test.mappings)
-#
-#
-## by default, if mapped.tests parameter given, tests within Software is suppressed
-## Here's how to turn it back on
-test.results <- compareTests(test.library, mapped.tests=test.mappings, show.all.tests=TRUE)
-#
-#
+test.results
 ### specify the reference versions to be used in tests BETWEEN software
 test.results <- compareTests(test.library, mapped.tests=test.mappings, ref.versions=list(bowtie="1.0.1", bowtie2="2.2.3"))
-#
-#
+test.results
 
+```
+
+
+By default, if mapped.tests parameter given, tests __within__ Software are suppressed. Here's how to turn it back on
+
+```{r}
+
+# Here's how to turn it back on
+test.results <- compareTests(test.library, mapped.tests=test.mappings, show.all.tests=TRUE)
 #What have we got at the end of all that
 test.results
 
@@ -96,18 +176,11 @@ test.results
 
 Produced from an R-markdown (Rmd) file ../reports/example.Rmd . 
 
-NOT CURRENTLYPart of an analysis pipeline controlled by 'make' processing this [makefile](../makefile)
-
 
 [Back to top](#Top)
 
-To compile me, run this in shell:
 
-``` {shell}
-cd ~/HanleyGroup/BerryChIPseq_multiTissue
-make
 
-```
 
 Information about the R session:-
 

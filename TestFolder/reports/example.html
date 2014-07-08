@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-<title>KANUTE - version testing between softwares and versions   <a name="Top"></a></title>
+<title>KANUTE - behaviour testing between softwares and versions   <a name="Top"></a></title>
 
 
 
@@ -149,34 +149,72 @@ hr {
 </head>
 
 <body>
-<h1>KANUTE - version testing between softwares and versions   <a name="Top"></a></h1>
+<h1>KANUTE - behaviour testing between softwares and versions   <a name="Top"></a></h1>
 
-<h1>Working notebook</h1>
+<h1>Example: Kadmon</h1>
 
 <h3>Dave T. Gerrard, University of Manchester</h3>
 
-<h3>Produced 2014-07-07</h3>
+<h3>Produced 2014-07-08</h3>
 
 <p><a href="http://personalpages.manchester.ac.uk/staff/David.Gerrard/">Dave&#39;s website</a></p>
 
 <h2>Table of contents</h2>
 
 <ul>
-<li><a href="#Example">Example</a></li>
-<li><a href="#"></a></li>
-<li><a href="#"></a></li>
+<li><a href="#Overview">Overview</a></li>
+<li><a href="#test_dir">Tests directory</a></li>
+<li><a href="#Example">Comparing tests example</a></li>
 </ul>
-
-<pre><code>## [1] &quot;/mnt/lustre/scratch/mqbssdgb/kanute/TestFolder/reports&quot;
-</code></pre>
 
 <p><a href="#Top">Back to top</a></p>
 
-<h2><a name="Example"></a>Example</h2>
+<h1><a name="overview"></a>Overview</h1>
 
-<p>TODO</p>
+<p>This is framework and piece of software to support:-</p>
 
-<pre><code class="r">########### Reading testing results produced elsewhere (no local testing, only comparison).
+<ul>
+<li>checking if a specific behaviour of a piece of software is constant between versions.</li>
+<li>checking if the behaviour of one piece of software is identical to the supposed same behaviour in another piece of software.</li>
+</ul>
+
+<p>It is <strong>not</strong> intended for performance benchmarking or for comparing <em>real world</em> noisy data.</p>
+
+<p>The process has two parts:-</p>
+
+<ol>
+<li>A set of unit tests. These can be written in any language but must produce a pre-defined output. Tests and Outputs are organised in a structured testing folder/directory. Users are free to develop individual tests over a long period of time. Reports can then be run on an ad-hoc basis, using all or just a selection of test results.</li>
+<li>Software to parse the tests, their output and make comparisons between versions and between softwares. The current implementation is in R (see below) but could be ported to any language.</li>
+</ol>
+
+<p><a href="#Top">Back to top</a></p>
+
+<h1><a name="test_dir"></a>Tests directory</h1>
+
+<p>The <a href="../">testing folder</a> will contain the following sub-folders</p>
+
+<ul>
+<li><a href="../inputs/">inputs</a>      a collection of minimal input data, used by tests to produce outputs</li>
+<li><a href="../tests/">tests</a>        the individual test scripts, arranged by <strong>software</strong></li>
+<li><a href="../outputs/">outputs</a>    the individual test results, arranged by <strong>software</strong> then <em>version</em></li>
+<li><a href="../reports/">reports</a>    an optional directory containing reports (like this one)<br></li>
+</ul>
+
+<p>The software sub-folders within tests/ should contain a file called SOFTWARE.versions listing the version IDs. This is also a good place to list full paths to executable for each version, if so, the file should be tab delimited. Example: <a href="../tests/bowtie/bowtie.versions">bowtie.versions</a></p>
+
+<p>The individual test scripts should specify the name of the output file they generate. Currently, the KANUTE package can detect these in bash scripts if they are assigned to the <em>TEST_OUT_NAME</em> variable.</p>
+
+<p><a href="#Top">Back to top</a></p>
+
+<h1><a name="Example"></a>Comparing tests example</h1>
+
+<p>Running the tests is kept separate from comparing the results between different versions or software.</p>
+
+<p>The test comparisons have initially been implemented in R and make use of the md5sum program.</p>
+
+<p>The user begins by giving the directory where the tests are stored and defining a subset of software names and version that they are interested in. The following workflow is in R </p>
+
+<pre><code class="r">########### Reading testing results produced earlier (no execution, only comparison).
 #
 parent_dir &lt;-  paste(Sys.getenv(&quot;SCRATCH&quot;),&quot;kanute&quot;, sep=&quot;/&quot;)
 testingFolder &lt;- paste(parent_dir, &quot;TestFolder&quot;, sep=&quot;/&quot;)
@@ -185,19 +223,63 @@ outputsDirTop &lt;- paste(testingFolder, &quot;outputs&quot;,sep=&quot;/&quot;)
 source(paste(parent_dir, &quot;scripts/kanute_funcs.R&quot;, sep=&quot;/&quot;))
 #
 #
-#
-#
 softwares &lt;- c(&quot;bowtie&quot;, &quot;bowtie2&quot;)
-#
+</code></pre>
+
+<p>There is a function <em>scanTestDir()</em> to got through the directory and pick out softwares, versions and tests. This produces a list object.</p>
+
+<pre><code class="r">#
 testing.list &lt;- scanTestDir(softwares=softwares, testDirTop=testDirTop)
-#
-#
-#
+testing.list
+</code></pre>
+
+<pre><code>## $bowtie
+## $bowtie$outputs
+## bowtie_singleRead_1.generic.test.sh bowtie_singleRead_2.generic.test.sh      bowtie_version.generic.test.sh 
+##                  &quot;single_read1.sam&quot;                  &quot;single_read2.sam&quot;                       &quot;version.out&quot; 
+## 
+## $bowtie$versions.info
+##       V1                                      V2
+## 1 0.12.7 /opt/gridware/apps/bowtie/0.12.7/bowtie
+## 2 0.12.8 /opt/gridware/apps/bowtie/0.12.8/bowtie
+## 3 0.12.9 /opt/gridware/apps/bowtie/0.12.9/bowtie
+## 4  1.0.0  /opt/gridware/apps/bowtie/1.0.0/bowtie
+## 5  1.0.1  /opt/gridware/apps/bowtie/1.0.1/bowtie
+## 
+## 
+## $bowtie2
+## $bowtie2$outputs
+## bowtie2_singleRead_1.generic.test.sh bowtie2_singleRead_2.generic.test.sh      bowtie2_version.generic.test.sh 
+##                   &quot;single_read1.sam&quot;                   &quot;single_read2.sam&quot;                        &quot;version.out&quot; 
+## 
+## $bowtie2$versions.info
+##            V1                                             V2
+## 1       2.2.3       /opt/gridware/apps/bowtie2/2.2.3/bowtie2
+## 2       2.2.2       /opt/gridware/apps/bowtie2/2.2.2/bowtie2
+## 3       2.2.1       /opt/gridware/apps/bowtie2/2.2.1/bowtie2
+## 4       2.2.0       /opt/gridware/apps/bowtie2/2.2.0/bowtie2
+## 5       2.1.0       /opt/gridware/apps/bowtie2/2.1.0/bowtie2
+## 6       2.0.5       /opt/gridware/apps/bowtie2/2.0.5/bowtie2
+## 7       2.0.2       /opt/gridware/apps/bowtie2/2.0.2/bowtie2
+## 8 2.0.0-beta7 /opt/gridware/apps/bowtie2/2.0.0-beta7/bowtie2
+## 9 2.0.0-beta6 /opt/gridware/apps/bowtie2/2.0.0-beta6/bowtie2
+</code></pre>
+
+<pre><code class="r">#
+</code></pre>
+
+<p>Using the result of <em>scanTestDir</em> the user can then get md5sum CHECKSUM values for every test with a result file. Again this produces another list.</p>
+
+<pre><code class="r">#
 test.library &lt;- compileTestResults(testing.list, outputsDirTop)
+#test.library   # don&#39;t show this, it&#39;s a big hier-archichal list of md5sums
 #
 #
-#
-test.results &lt;- compareTests(test.library)
+</code></pre>
+
+<p>The above list has all the information to check whether any two tests produced the same input, or not. The default behaviour of <em>compareTests</em> is to check for concordance between version <strong>within</strong> one piece of software.</p>
+
+<pre><code class="r">test.results &lt;- compareTests(test.library)
 </code></pre>
 
 <pre><code>## [1] &quot;#######KANUTE###########: Comparing test results WITHIN each software&quot;
@@ -223,28 +305,80 @@ test.results &lt;- compareTests(test.library)
 ## [1] &quot;2.0.0-beta6&quot;
 </code></pre>
 
+<pre><code class="r">test.results
+</code></pre>
+
+<pre><code>## $bowtie
+##                                  test 0.12.7 0.12.8 0.12.9 1.0.0 1.0.1
+## 1 bowtie_singleRead_1.generic.test.sh   TRUE   TRUE   TRUE  TRUE  TRUE
+## 2 bowtie_singleRead_2.generic.test.sh   TRUE   TRUE   TRUE  TRUE  TRUE
+## 3      bowtie_version.generic.test.sh   TRUE  FALSE  FALSE FALSE FALSE
+## 
+## $bowtie2
+##                                   test 2.2.3 2.2.2 2.2.1 2.2.0 2.1.0 2.0.5 2.0.2 2.0.0-beta7 2.0.0-beta6
+## 1 bowtie2_singleRead_1.generic.test.sh  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE        TRUE        TRUE
+## 2 bowtie2_singleRead_2.generic.test.sh  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE        TRUE        TRUE
+## 3      bowtie2_version.generic.test.sh  TRUE FALSE FALSE FALSE FALSE FALSE FALSE       FALSE       FALSE
+</code></pre>
+
 <pre><code class="r">#
-## created a tab-delim file called test.mappings in top of tests/ folder
+</code></pre>
+
+<p>An important feature of KANUTE is to test for differences in results <strong>between</strong> different softwares. This depends on the user having written tests that produce comparable results. The user must then also provide a table of mappings between specific tests performed on two different softares. Here is an example <a href="../tests/test.mappings">file</a> </p>
+
+<pre><code class="r">## created a tab-delim file called test.mappings in top of tests/ folder
 ## mapping.name software1 software1.testA software2   software2.testA TRUE
 ## the final column is TRUE if expect results to be the same, FALSE if not or NA if unknown.
 ## May need to be 1/0 instead of TRUE/FALSE
 #
 test.mappings &lt;- read.delim(paste(testDirTop, &quot;test.mappings&quot;, sep=&quot;/&quot;), header=F, stringsAsFactors=F)
 names(test.mappings) &lt;- c(&quot;mapping.name&quot;, &quot;software1&quot;, &quot;software1.test&quot;, &quot;software2&quot;, &quot;software2.test&quot;, &quot;expectIdentical&quot;)
-#
-#
-#
-test.results &lt;- compareTests(test.library, mapped.tests=test.mappings)
+test.mappings
+</code></pre>
+
+<pre><code>##           mapping.name software1                      software1.test software2                       software2.test expectIdentical
+## 1 singleRead_1.generic    bowtie bowtie_singleRead_1.generic.test.sh   bowtie2 bowtie2_singleRead_1.generic.test.sh           FALSE
+## 2 singleRead_2.generic    bowtie bowtie_singleRead_2.generic.test.sh   bowtie2 bowtie2_singleRead_2.generic.test.sh            TRUE
+</code></pre>
+
+<p>Then, giving this <em>data.frame</em> to <em>compareTests</em> will make a comparison BETWEEN softwares.</p>
+
+<pre><code class="r">test.results &lt;- compareTests(test.library, mapped.tests=test.mappings)
 </code></pre>
 
 <pre><code>## [1] &quot;#######KANUTE###########: Comparing tests BETWEEN softwares&quot;
 ## [1] &quot;2 mapped tests&quot;
 </code></pre>
 
-<pre><code class="r">#
-#
-## by default, if mapped.tests parameter given, tests within Software is suppressed
-## Here&#39;s how to turn it back on
+<pre><code class="r">test.results
+</code></pre>
+
+<pre><code>## $MAPPED.TESTS
+##           mapping.name software1                      software1.test software2                       software2.test expectIdentical result   ver1  ver2
+## 1 singleRead_1.generic    bowtie bowtie_singleRead_1.generic.test.sh   bowtie2 bowtie2_singleRead_1.generic.test.sh           FALSE  FALSE 0.12.7 2.2.3
+## 2 singleRead_2.generic    bowtie bowtie_singleRead_2.generic.test.sh   bowtie2 bowtie2_singleRead_2.generic.test.sh            TRUE   TRUE 0.12.7 2.2.3
+</code></pre>
+
+<pre><code class="r">### specify the reference versions to be used in tests BETWEEN software
+test.results &lt;- compareTests(test.library, mapped.tests=test.mappings, ref.versions=list(bowtie=&quot;1.0.1&quot;, bowtie2=&quot;2.2.3&quot;))
+</code></pre>
+
+<pre><code>## [1] &quot;#######KANUTE###########: Comparing tests BETWEEN softwares&quot;
+## [1] &quot;2 mapped tests&quot;
+</code></pre>
+
+<pre><code class="r">test.results
+</code></pre>
+
+<pre><code>## $MAPPED.TESTS
+##           mapping.name software1                      software1.test software2                       software2.test expectIdentical result  ver1  ver2
+## 1 singleRead_1.generic    bowtie bowtie_singleRead_1.generic.test.sh   bowtie2 bowtie2_singleRead_1.generic.test.sh           FALSE  FALSE 1.0.1 2.2.3
+## 2 singleRead_2.generic    bowtie bowtie_singleRead_2.generic.test.sh   bowtie2 bowtie2_singleRead_2.generic.test.sh            TRUE   TRUE 1.0.1 2.2.3
+</code></pre>
+
+<p>By default, if mapped.tests parameter given, tests <strong>within</strong> Software are suppressed. Here&#39;s how to turn it back on</p>
+
+<pre><code class="r"># Here&#39;s how to turn it back on
 test.results &lt;- compareTests(test.library, mapped.tests=test.mappings, show.all.tests=TRUE)
 </code></pre>
 
@@ -273,27 +407,26 @@ test.results &lt;- compareTests(test.library, mapped.tests=test.mappings, show.a
 ## [1] &quot;2 mapped tests&quot;
 </code></pre>
 
-<pre><code class="r">#
-#
-### specify the reference versions to be used in tests BETWEEN software
-test.results &lt;- compareTests(test.library, mapped.tests=test.mappings, ref.versions=list(bowtie=&quot;1.0.1&quot;, bowtie2=&quot;2.2.3&quot;))
-</code></pre>
-
-<pre><code>## [1] &quot;#######KANUTE###########: Comparing tests BETWEEN softwares&quot;
-## [1] &quot;2 mapped tests&quot;
-</code></pre>
-
-<pre><code class="r">#
-#
-
-#What have we got at the end of all that
+<pre><code class="r">#What have we got at the end of all that
 test.results
 </code></pre>
 
-<pre><code>## $MAPPED.TESTS
-##           mapping.name software1                      software1.test software2                       software2.test expectIdentical result  ver1  ver2
-## 1 singleRead_1.generic    bowtie bowtie_singleRead_1.generic.test.sh   bowtie2 bowtie2_singleRead_1.generic.test.sh           FALSE  FALSE 1.0.1 2.2.3
-## 2 singleRead_2.generic    bowtie bowtie_singleRead_2.generic.test.sh   bowtie2 bowtie2_singleRead_2.generic.test.sh            TRUE   TRUE 1.0.1 2.2.3
+<pre><code>## $bowtie
+##                                  test 0.12.7 0.12.8 0.12.9 1.0.0 1.0.1
+## 1 bowtie_singleRead_1.generic.test.sh   TRUE   TRUE   TRUE  TRUE  TRUE
+## 2 bowtie_singleRead_2.generic.test.sh   TRUE   TRUE   TRUE  TRUE  TRUE
+## 3      bowtie_version.generic.test.sh   TRUE  FALSE  FALSE FALSE FALSE
+## 
+## $bowtie2
+##                                   test 2.2.3 2.2.2 2.2.1 2.2.0 2.1.0 2.0.5 2.0.2 2.0.0-beta7 2.0.0-beta6
+## 1 bowtie2_singleRead_1.generic.test.sh  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE        TRUE        TRUE
+## 2 bowtie2_singleRead_2.generic.test.sh  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE        TRUE        TRUE
+## 3      bowtie2_version.generic.test.sh  TRUE FALSE FALSE FALSE FALSE FALSE FALSE       FALSE       FALSE
+## 
+## $MAPPED.TESTS
+##           mapping.name software1                      software1.test software2                       software2.test expectIdentical result   ver1  ver2
+## 1 singleRead_1.generic    bowtie bowtie_singleRead_1.generic.test.sh   bowtie2 bowtie2_singleRead_1.generic.test.sh           FALSE  FALSE 0.12.7 2.2.3
+## 2 singleRead_2.generic    bowtie bowtie_singleRead_2.generic.test.sh   bowtie2 bowtie2_singleRead_2.generic.test.sh            TRUE   TRUE 0.12.7 2.2.3
 </code></pre>
 
 <p><a href="#Top">Back to top</a></p>
@@ -308,16 +441,7 @@ test.results
 
 <p>Produced from an R-markdown (Rmd) file ../reports/example.Rmd . </p>
 
-<p>NOT CURRENTLYPart of an analysis pipeline controlled by &#39;make&#39; processing this <a href="../makefile">makefile</a></p>
-
 <p><a href="#Top">Back to top</a></p>
-
-<p>To compile me, run this in shell:</p>
-
-<pre><code class="shell">cd ~/HanleyGroup/BerryChIPseq_multiTissue
-make
-
-</code></pre>
 
 <p>Information about the R session:-</p>
 
