@@ -3,15 +3,13 @@
 # map a single read to a simple genome using bowtie2
 # expect only one mapping
 # as bowtie output contains version information in headers, need to post-prcoess using 'samtools view' to get just the mapping.
-# PROBLEM module command not available to bash script.
-# module load apps/bowtie2/2.2.3
 module load apps/samtools/0.1.19
 
 NAME=${1-'bowtie2'}
 VERSION=${2-'current'}
 FULLPATH=${3-'$NAME'}
 TEST_OUT_NAME='single_read2.sam'
-
+#kanute_dir is an environment variable
 if [ ! -d "$kanute_dir/outputs/$NAME/$VERSION" ]; then
         mkdir $kanute_dir/outputs/$NAME/$VERSION
 fi
