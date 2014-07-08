@@ -59,6 +59,8 @@ Running the tests is kept separate from comparing the results between different 
 
 The test comparisons have initially been implemented in R and make use of the md5sum program.
 
+## Starting the R session
+
 The user begins by giving the directory where the tests are stored and defining a subset of software names and version that they are interested in. The following workflow is in R 
 
 
@@ -76,6 +78,7 @@ source(paste(parent_dir, "scripts/kanute_funcs.R", sep="/"))
 softwares <- c("bowtie", "bowtie2")
 ```
 
+## Scan for tests in the testing folder
 There is a function _scanTestDir()_ to got through the directory and pick out softwares, versions and tests. This produces a list object.
 
 
@@ -122,6 +125,8 @@ testing.list
 #
 ```
 
+## Compile md5sums for each test
+
 Using the result of _scanTestDir_ the user can then get md5sum CHECKSUM values for every test with a result file. Again this produces another list.
 
 
@@ -134,7 +139,9 @@ test.library <- compileTestResults(testing.list, outputsDirTop)
 #
 ```
 
-The above list has all the information to check whether any two tests produced the same input, or not. The default behaviour of _compareTests_ is to check for concordance between version __within__ one piece of software.
+# Compare results across versions
+
+The above list has all the information to check whether any two tests produced the same input, or not. The default behaviour of _compareTests_ is to check for concordance between versions __within__ one piece of software.
 
 
 ```r
@@ -186,6 +193,8 @@ test.results
 ```r
 #
 ```
+
+## Compare results for some tests across softwares
 
 An important feature of KANUTE is to test for differences in results __between__ different softwares. This depends on the user having written tests that produce comparable results. The user must then also provide a table of mappings between specific tests performed on two different softares. Here is an example [file](../tests/test.mappings) 
 
@@ -311,9 +320,17 @@ test.results
 ## 2 singleRead_2.generic    bowtie bowtie_singleRead_2.generic.test.sh   bowtie2 bowtie2_singleRead_2.generic.test.sh            TRUE   TRUE 0.12.7 2.2.3
 ```
 
+## <a name="todo"></a>TO DO ##
 
+- Build in more tests for more software
+- Visualisation of results (Coloured grid, use Shiny)
+- Run/update tests from within R session
+- Allow for non-generic tests.
+- Tests between installations or compare against an archive (may need extra structure or second testingFolder).
 
 [Back to top](#Top)
+
+## 
 
 
 [Back to top](#Top)

@@ -212,6 +212,8 @@ hr {
 
 <p>The test comparisons have initially been implemented in R and make use of the md5sum program.</p>
 
+<h2>Starting the R session</h2>
+
 <p>The user begins by giving the directory where the tests are stored and defining a subset of software names and version that they are interested in. The following workflow is in R </p>
 
 <pre><code class="r">########### Reading testing results produced earlier (no execution, only comparison).
@@ -225,6 +227,8 @@ source(paste(parent_dir, &quot;scripts/kanute_funcs.R&quot;, sep=&quot;/&quot;))
 #
 softwares &lt;- c(&quot;bowtie&quot;, &quot;bowtie2&quot;)
 </code></pre>
+
+<h2>Scan for tests in the testing folder</h2>
 
 <p>There is a function <em>scanTestDir()</em> to got through the directory and pick out softwares, versions and tests. This produces a list object.</p>
 
@@ -268,6 +272,8 @@ testing.list
 <pre><code class="r">#
 </code></pre>
 
+<h2>Compile md5sums for each test</h2>
+
 <p>Using the result of <em>scanTestDir</em> the user can then get md5sum CHECKSUM values for every test with a result file. Again this produces another list.</p>
 
 <pre><code class="r">#
@@ -277,7 +283,9 @@ test.library &lt;- compileTestResults(testing.list, outputsDirTop)
 #
 </code></pre>
 
-<p>The above list has all the information to check whether any two tests produced the same input, or not. The default behaviour of <em>compareTests</em> is to check for concordance between version <strong>within</strong> one piece of software.</p>
+<h1>Compare results across versions</h1>
+
+<p>The above list has all the information to check whether any two tests produced the same input, or not. The default behaviour of <em>compareTests</em> is to check for concordance between versions <strong>within</strong> one piece of software.</p>
 
 <pre><code class="r">test.results &lt;- compareTests(test.library)
 </code></pre>
@@ -323,6 +331,8 @@ test.library &lt;- compileTestResults(testing.list, outputsDirTop)
 
 <pre><code class="r">#
 </code></pre>
+
+<h2>Compare results for some tests across softwares</h2>
 
 <p>An important feature of KANUTE is to test for differences in results <strong>between</strong> different softwares. This depends on the user having written tests that produce comparable results. The user must then also provide a table of mappings between specific tests performed on two different softares. Here is an example <a href="../tests/test.mappings">file</a> </p>
 
@@ -428,6 +438,16 @@ test.results
 ## 1 singleRead_1.generic    bowtie bowtie_singleRead_1.generic.test.sh   bowtie2 bowtie2_singleRead_1.generic.test.sh           FALSE  FALSE 0.12.7 2.2.3
 ## 2 singleRead_2.generic    bowtie bowtie_singleRead_2.generic.test.sh   bowtie2 bowtie2_singleRead_2.generic.test.sh            TRUE   TRUE 0.12.7 2.2.3
 </code></pre>
+
+<h2><a name="todo"></a>TO DO</h2>
+
+<ul>
+<li>Build in more tests for more software</li>
+<li>Visualisation of results (Coloured grid, use Shiny)</li>
+<li>Run/update tests from within R session</li>
+<li>Allow for non-generic tests.</li>
+<li>Tests between installations or compare against an archive (may need extra structure or second testingFolder).</li>
+</ul>
 
 <p><a href="#Top">Back to top</a></p>
 
