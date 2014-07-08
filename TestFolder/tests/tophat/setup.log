@@ -1,0 +1,1 @@
+ls /opt/gridware/apps/tophat/ | awk {'print $0"\t/opt/gridware/apps/tophat/"$0"/tophat"'} > tophat.versions
