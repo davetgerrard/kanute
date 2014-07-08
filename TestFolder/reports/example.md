@@ -141,7 +141,7 @@ test.library <- compileTestResults(testing.list, outputsDirTop)
 
 # Compare results across versions
 
-The above list has all the information to check whether any two tests produced the same input, or not. The default behaviour of _compareTests_ is to check for concordance between versions __within__ one piece of software.
+The above list has all the information to check whether any two tests produced the same output, or not. The default behaviour of _compareTests_ is to check for concordance between versions __within__ one piece of software.
 
 
 ```r
