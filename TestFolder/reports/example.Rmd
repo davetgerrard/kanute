@@ -23,7 +23,7 @@ options(width=500)
 
 # <a name="overview"></a>Overview ##
 
-This is framework and piece of software to support:-
+This is a framework and piece of software to support:-
 - checking if a specific behaviour of a piece of software is constant between versions.
 - checking if the behaviour of one piece of software is identical to the supposed same behaviour in another piece of software.
 
