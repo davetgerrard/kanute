@@ -6,8 +6,27 @@
 # examples
 # example data, test data
 # vignette
+# add function to create a testing folder with primitive examples (ls, cat, print)
 
 
 # May attempt to use devtools. https://github.com/hadley/devtools
+
+# How to start?
+#http://stackoverflow.com/questions/17521300/start-new-r-package-development-on-github
+
+
+# Installed Rtools on windows machine
+http://cran.r-project.org/bin/windows/Rtools/
+# installed Rtools 3.1 as important to match with R version (3.1.1)
+
+
+# tried out devtools::create()    very similar to package skeleton, but create() does 'create' man/ directory or Rd files from the current environ.
+# Additionally, create() adds a package.Rproj file for Rstudio and a git.ignore file (.Rproj, .Rdata, .Rhistory).
+# so basic package structure requires named folder 'kanute' with R/ sub-dir.
+# at top level NAMESPACE and DESCRIPTION files.
+
+
+
+
 
 
