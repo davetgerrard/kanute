@@ -46,4 +46,6 @@ git remote set-url origin git@github.com:davetgerrard/kanute.git
 
 # I then put some functions as bare R code in the R/ sub-dir. When I run install_github(repo="davetgerrard/kanute") again, these functions are now available, but with no documentation.
 
+# Next added some Roxygen2 documentation to the functions. Created man/ folder and .Rd files automatically using devtools:::document()
+
 
