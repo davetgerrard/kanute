@@ -95,9 +95,7 @@ test.results <- compareTests(test.library, mapped.tests=test.mappings)
 test.results <- compareTests(test.library, mapped.tests=test.mappings, show.all.tests=TRUE)
 
 
-## specify the reference versions.
-
-
+## specify the reference versions to be used in tests BETWEEN software
 test.results <- compareTests(test.library, mapped.tests=test.mappings, ref.versions=list(bowtie="1.0.1", bowtie2="2.2.3"))
 
 
