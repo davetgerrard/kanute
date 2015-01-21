@@ -1,7 +1,19 @@
 #
-# creates a list of lists (of lists)
+# 
 #[[library]][[software]][[version]][[test]]
 #  names must be vector of 
+#' compileTestResults
+#' 
+#' Compiles test results. 
+#' 
+#' creates a list of lists (of lists) [[library]][[software]][[version]][[test]]
+#' 
+#' @param softwareList list of softwares
+#' @param outputsDirTop top of output dirs
+#' 
+#' @return a list of lists of lists [[library]][[software]][[version]][[test]]
+#' 
+#' @export
 compileTestResults <- function(softwareList,  outputsDirTop)  {
     result.list <- list()
     

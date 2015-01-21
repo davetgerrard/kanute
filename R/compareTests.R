@@ -1,6 +1,21 @@
-# could write generic function that take result from above as argument or that can accept all the data and run the above too.
-# Current version take library of test results from compileTestResults()
 #
+#' compareTests
+#' 
+#' Compares Tests.
+#' 
+#' Current version take library of test results from compileTestResults().  could write generic function that take result from above as argument or that can accept all the data and run the above too.
+#' 
+#' @param x param description
+#' @param softwares param description
+#' @param versions param description
+#' @param ref.software param description
+#' @param ref.versions param description
+#' @param mapped.tests param description
+#' @param show.all.tests param description
+#' 
+#' @return some comparison results
+#' 
+#' @export
 compareTests <- function(x, softwares=names(x), versions=lapply(x, names),  ref.software = NULL, ref.versions =NULL, mapped.tests=NULL, show.all.tests=is.null(mapped.tests))  {
     # test each versions results against the reference
     #print(ref.software)

@@ -42,4 +42,8 @@ git clone https://github.com/davetgerrard/kanute.git
 #git remote set-url origin git@github.com:abc/xyz.git
 git remote set-url origin git@github.com:davetgerrard/kanute.git
 
+# AT THIS POINT,  Even before adding any code, the repository can be installed as an R package!
+
+# I then put some functions as bare R code in the R/ sub-dir. When I run install_github(repo="davetgerrard/kanute") again, these functions are now available, but with no documentation.
+
 
