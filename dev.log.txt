@@ -38,5 +38,8 @@ git remote set-url origin https://github.com/davetgerrard/kanute.git
 # then clone it anew
 git clone https://github.com/davetgerrard/kanute.git
 
+#http://stackoverflow.com/questions/5813726/troubleshooting-git-push-it-asks-for-a-user-pass
+#git remote set-url origin git@github.com:abc/xyz.git
+git remote set-url origin git@github.com:davetgerrard/kanute.git
 
 
