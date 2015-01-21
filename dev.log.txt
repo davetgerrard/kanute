@@ -1,0 +1,13 @@
+# LOG of process to turn Kanute into an R package.
+
+# TODO:-
+# documentation  - roxygen2 format
+# structure
+# examples
+# example data, test data
+# vignette
+
+
+# May attempt to use devtools. https://github.com/hadley/devtools
+
+
