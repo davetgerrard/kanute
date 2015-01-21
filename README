@@ -1,6 +1,11 @@
 
 ### KANUTE -  unit-style behaviour testing for softwares and software versions.
 
+# Installation 
+# in R:-
+library(devtools)
+install_github(repo="davetgerrard/kanute")
+
 
 # Test functionality of software as per unit tests.
 # Compare functionality between versions of same software.

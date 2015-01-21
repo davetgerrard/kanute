@@ -8,7 +8,7 @@
 # vignette
 # add function to create a testing folder with primitive examples (ls, cat, print)
 # transfer hosting to github to make public.
-
+# Test that can be installed from Github.  install_github(repo="davetgerrard/kanute")
 
 # May attempt to use devtools. https://github.com/hadley/devtools
 
@@ -32,6 +32,11 @@ http://cran.r-project.org/bin/windows/Rtools/
 
 # then in each instance (PC and on compute cluster), changed remote thus
 git remote set-url origin https://github.com/davetgerrard/kanute.git
+
+# on Compute cluster I didn't have email or user.name set. I played around with these and managed to break the .git so that I could no longer upload. 
+# In the end I removed the repository: rm -rF kanute/
+# then clone it anew
+git clone https://github.com/davetgerrard/kanute.git
 
 
 
