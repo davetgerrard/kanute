@@ -28,6 +28,10 @@ http://cran.r-project.org/bin/windows/Rtools/
 
 
 
+# Changed over to GitHub for public hosting.  Used Githubs import tool, supplying URL or Bitbucket repo.
+
+# then in each instance (PC and on compute cluster), changed remote thus
+git remote set-url origin https://github.com/davetgerrard/kanute.git
 
 
 
