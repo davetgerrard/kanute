@@ -47,5 +47,17 @@ git remote set-url origin git@github.com:davetgerrard/kanute.git
 # I then put some functions as bare R code in the R/ sub-dir. When I run install_github(repo="davetgerrard/kanute") again, these functions are now available, but with no documentation.
 
 # Next added some Roxygen2 documentation to the functions. Created man/ folder and .Rd files automatically using devtools:::document()
+# and again tested install. Works and shows documentation for individual functions.
 
 
+# individual help pages currently work, but links between them do not. TOOD check roxygen2 documentation.
+# TODO fix this
+
+
+# How to include an example set of tests?  Maybe simplest as a url?
+# http://cran.r-project.org/doc/manuals/R-exts.html#Data-in-packages    <- NOT THIS
+
+
+
+# Realised that md5sum (used to check output of tests) would not be portable.  Altered compileTestResults to use digest() from digest package to generate md5.
+# This introduced dependency on digest package. Added ChangeLog to reflect these changes.

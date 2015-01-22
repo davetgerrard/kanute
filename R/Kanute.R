@@ -24,6 +24,7 @@
 #' 
 #' ...
 #' 
+#' @import digest
 #' @docType package
 #' @name Kanute-package
 NULL

@@ -1,0 +1,8 @@
+
+
+202015-01-22  Dave Gerrard  <davetgerrard@gmail.com>
+  	* compileTestResults: now uses digest package to calc md5 (rather than call to unix command line). More portable but introduces package dependency.
+	* DESCRIPTION: added digest as dependency
+	* Kanute.R: added digest as dependency
+
+# Version 0.1
