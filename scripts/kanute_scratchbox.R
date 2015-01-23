@@ -60,7 +60,8 @@
 testingFolder <- "C:/Users/Dave/HalfStarted/Kanute/TestFolder"
 testDirTop <- paste(testingFolder, "tests",sep="/")
 outputsDirTop <- paste(testingFolder, "outputs",sep="/")
-source('C:/Users/Dave/HalfStarted/Kanute/scripts/kanute_funcs.R')
+library(Kanute)
+#source('C:/Users/Dave/HalfStarted/Kanute/scripts/kanute_funcs.R')
 
 
 
