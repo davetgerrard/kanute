@@ -1,14 +1,15 @@
 # LOG of process to turn Kanute into an R package.
 
 # TODO:-
-# documentation  - roxygen2 format
-# structure
-# examples
-# example data, test data
-# vignette
-# add function to create a testing folder with primitive examples (ls, cat, print)
-# transfer hosting to github to make public.
-# Test that can be installed from Github.  install_github(repo="davetgerrard/kanute")
+# TODO: documentation  - roxygen2 format
+# TODO: structure
+# TODO: examples
+# TODO: example data, test data
+# TODO: vignette
+# TODO: add function to create a testing folder with primitive examples (ls, cat, print)
+# DONE: transfer hosting to github to make public.
+# DONE: Test that can be installed from Github.  install_github(repo="davetgerrard/kanute")
+# TODO: Write function(s) to output test results as html/markdown with links to test files and result files. Tabulate as 1/0 or TRUE/FALSE?
 
 # May attempt to use devtools. https://github.com/hadley/devtools
 
@@ -61,3 +62,9 @@ git remote set-url origin git@github.com:davetgerrard/kanute.git
 
 # Realised that md5sum (used to check output of tests) would not be portable.  Altered compileTestResults to use digest() from digest package to generate md5.
 # This introduced dependency on digest package. Added ChangeLog to reflect these changes.
+
+
+# To be useful, need well presented reporting of version comparisons.
+# If initial users are software admins and expert users, an html page on a server would work pretty well.
+# So, want to output test results as tables in html/markdown. Can use knitr::kable(). 
+# To link to test files wrote createTestLinks() and an auxillary function convertLinkToRelative().

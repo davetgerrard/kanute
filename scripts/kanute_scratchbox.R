@@ -103,11 +103,29 @@ test.results <- compareTests(test.library, mapped.tests=test.mappings, ref.versi
 
 
 
+## Instead of plotting, might be really handy to be able to show nicely formatted tables in markdown, with links to the original tests (if they are available).
+
+require(knitr)
+single.result <- test.results[['bowtie']]
+kable(single.result)
+# would be nice to highlight the reference version?
+
+
+
+#createTestLinks(test="bowtie_singleRead_2.generic.test.sh", software="bowtie", testFolder=testDirTop, relative.link=T)
+single.result <- test.results[['bowtie']]
+single.result$test <- as.character(single.result$test)  # remove factor
+for(i in 1:nrow(single.result))  {
+  single.result$test[i] <- createTestLinks(test=as.character(single.result$test[i]), software="bowtie", testFolder=testDirTop, relative.link=T)
+}
+kable(single.result)
+
+
 stopifnot(FALSE)
 
 
 
-
+############ development
 
 name <- "bowtie2"
 testDirTop <- paste(testingFolder, "tests",sep="/")
