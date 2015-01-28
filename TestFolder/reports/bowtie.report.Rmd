@@ -1,0 +1,177 @@
+# KANUTE - behaviour testing between softwares and versions   <a name="Top"></a> 
+
+# Example: Bowtie on Kadmon
+
+
+### Dave T. Gerrard, University of Manchester
+### Produced `r Sys.Date()`
+[Dave's website](http://personalpages.manchester.ac.uk/staff/David.Gerrard/)
+
+
+## Table of contents ##
+- [Overview](#Overview)
+- [Tests directory](#test_dir)
+- [Comparing tests example](#Example)
+``` {r label_2, echo=FALSE}
+# What is the working directory?
+#getwd()
+options(width=500)
+
+```
+
+[Back to top](#Top)
+
+
+# <a name="overview"></a>Overview ##
+
+This is a framework and piece of software to support:-
+- checking if a specific behaviour of a piece of software is constant between versions.
+- checking if the behaviour of one piece of software is identical to the supposed same behaviour in another piece of software.
+
+It is __not__ intended for performance benchmarking or for comparing _real world_ noisy data.
+
+The process has two parts:-
+
+1. A set of unit tests. These can be written in any language but must produce a pre-defined output. Tests and Outputs are organised in a structured testing folder/directory. Users are free to develop individual tests over a long period of time. Reports can then be run on an ad-hoc basis, using all or just a selection of test results.
+2. Software to parse the tests, their output and make comparisons between versions and between softwares. The current implementation is in R (see below) but could be ported to any language.
+
+
+
+[Back to top](#Top)
+
+
+# <a name="test_dir"></a>Tests directory ##
+
+The [testing folder](../) will contain the following sub-folders
+
+- [inputs](../inputs/)		a collection of minimal input data, used by tests to produce outputs
+- [tests](../tests/)		the individual test scripts, arranged by __software__
+- [outputs](../outputs/)	the individual test results, arranged by __software__ then _version_
+- [reports](../reports/)	an optional directory containing reports (like this one)    
+
+
+The software sub-folders within tests/ should contain a file called SOFTWARE.versions listing the version IDs. This is also a good place to list full paths to executable for each version, if so, the file should be tab delimited. Example: [bowtie.versions](../tests/bowtie/bowtie.versions)
+
+The individual test scripts should specify the name of the output file they generate. Currently, the KANUTE package can detect these in bash scripts if they are assigned to the _TEST_OUT_NAME_ variable.
+
+
+
+[Back to top](#Top)
+
+
+# <a name="Example"></a>Comparing tests example ##
+
+Running the tests is kept separate from comparing the results between different versions or software.
+
+The test comparisons have initially been implemented in R and make use of the md5sum program.
+
+## Starting the R session
+
+The user begins by giving the directory where the tests are stored and defining a subset of software names and version that they are interested in. The following workflow is in R 
+
+
+```{r}
+
+########### Reading testing results produced earlier (no execution, only comparison).
+#
+parent_dir <-  "../../"
+testingFolder <- "../"  # should be parent of this reports/ folder.
+testDirTop <- paste(testingFolder, "tests",sep="/")
+outputsDirTop <- paste(testingFolder, "outputs",sep="/")
+
+library(Kanute)
+#
+#
+softwares <- c("bowtie", "bowtie2")
+
+
+
+```
+
+## Scan for tests in the testing folder
+There is a function _scanTestDir()_ to got through the directory and pick out softwares, versions and tests. This produces a list object.
+
+```{r}
+
+
+#
+testing.list <- scanTestDir(softwares=softwares, testDirTop=testDirTop)
+testing.list
+#
+
+```
+
+## Compile md5sums for each test
+
+Using the result of _scanTestDir_ the user can then get md5sum CHECKSUM values for every test with a result file. Again this produces another list.
+
+
+```{r}
+
+
+#
+test.library <- compileTestResults(testing.list, outputsDirTop)
+#test.library   # don't show this, it's a big hier-archichal list of md5sums
+#
+#
+
+
+```
+
+# Compare results across versions
+
+The above list has all the information to check whether any two tests produced the same output, or not. The default behaviour of _compareTests_ is to check for concordance between versions __within__ one piece of software.
+
+```{r}
+
+test.results <- compareTests(test.library)
+test.results
+#
+
+```
+
+
+# Output the results
+
+ Instead of plotting, might be really handy to be able to show nicely formatted tables in markdown, with links to the original tests (if they are available).
+
+```{r}
+require(knitr)
+single.result <- test.results[['bowtie']]
+kable(single.result)
+# would be nice to highlight the reference version?
+
+
+single.result <- test.results[['bowtie']]
+single.result$test <- as.character(single.result$test)  # remove factor
+for(i in 1:nrow(single.result))  {
+  single.result$test[i] <- createTestLinks(test=as.character(single.result$test[i]), software="bowtie", testFolder=testDirTop, relative.link=T)
+}
+kable(single.result)
+
+```
+
+
+
+[Back to top](#Top)
+
+
+## <a name="Anchor_name"></a>Start of next section ##
+
+[Back to top](#Top)
+
+## About this file 
+
+Produced from an R-markdown (Rmd) file ../reports/example.Rmd . 
+
+
+[Back to top](#Top)
+
+
+
+
+Information about the R session:-
+
+```{r Session-Info, echo=T}
+sessionInfo()
+```

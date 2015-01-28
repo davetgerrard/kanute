@@ -116,9 +116,20 @@ kable(single.result)
 single.result <- test.results[['bowtie']]
 single.result$test <- as.character(single.result$test)  # remove factor
 for(i in 1:nrow(single.result))  {
-  single.result$test[i] <- createTestLinks(test=as.character(single.result$test[i]), software="bowtie", testFolder=testDirTop, relative.link=T)
+  single.result$test[i] <- createTestLinks(test=as.character(single.result$test[i]), software="bowtie", testFolder=testDirTop, relative.link=T, start.dir="reports/")
+  #single.result$test[i] <- createTestLinks(test=as.character(single.result$test[i]), software="bowtie", testFolder=testDirTop, relative.link=T)
 }
 kable(single.result)
+
+
+
+
+kanuteReport(x=single.result, file="reports/testReport.md")
+
+
+
+generateReports(test.results)
+generateReports(test.results, add.directory=T)
 
 
 stopifnot(FALSE)
