@@ -66,7 +66,7 @@ library(Kanute)
 
 
 
-softwares <- c("bowtie", "bowtie2")
+softwares <- c("bowtie", "bowtie2", "multiBamCov")
 
 testing.list <- scanTestDir(softwares=softwares, testDirTop=testDirTop)
 
@@ -130,7 +130,9 @@ kanuteReport(x=single.result, file="reports/testReport.md")
 
 generateReports(test.results)
 generateReports(test.results, add.directory=T)
-
+## TODO make this work from any directory (or specify that you have to be in top of testfolder).
+## TODO add a directory of test reports with backlinks from all the individual reports to the directory
+## TODO correctly order version number in the reports (can be tricky).
 
 stopifnot(FALSE)
 

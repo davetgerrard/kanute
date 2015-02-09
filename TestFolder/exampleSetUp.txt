@@ -1,0 +1,69 @@
+Set up tests for a piece of software
+
+Find path to executable to program
+
+
+on our server we have different softwares stored under /opt/gridware
+
+ls /opt/gridware/apps/bedtools/
+
+# successive versions are (usually) retained and can be loaded separately.
+
+
+# set up tests for 'bedtools multicov'   which actually points to multiBamCov
+mkdir $SCRATCH/kanute/TestFolder/tests/multiBamCov
+# also set up outputs folder
+mkdir $SCRATCH/kanute/TestFolder/outputs/multiBamCov
+find  /opt/gridware/apps/bedtools -type f -name multiBamCov > $SCRATCH/kanute/TestFolder/tests/multiBamCov/multiBamCov.versions
+# go in and make into a two-column, tab delim file of format..
+2.18.2  /opt/gridware/apps/bedtools/2.18.2/multiBamCov
+2.19.1  /opt/gridware/apps/bedtools/2.19.1/multiBamCov
+...etc
+
+# Now need a script to run a 'test' on each version. Usually I start with getting the version info if possible.
+# SCript is made generic to run on any of the versions (or none) and put the results in a version specific subdirectory of outputs/
+
+
+#this single test script can now be run for a single version thus
+
+
+
+
+
+# but if there are many versions and multiple tests, it may be better to run all tests using a single control script.
+# the info on versions can be supplied in the .versions file and the the info on tests in the .tests file.
+
+# sometimes need to add '2>' after path to command because the info we wan't is on stderr.
+
+
+#from within TestFolder/tests/multiBamCov/
+bash run.all.sh			# uses local paths only so needs to be executed within this directory.
+# TODO fix run.all.sh so it can be run from anywhere.
+
+# Should have run the versions test on every 
+
+
+
+
+# TODO get counting example to run from a sam file (needs conversion to bam). multiBamCov only takes .bam as input
+
+# FOr now, run from bam file after conversion by samtools.
+# Create an indexed bam file to do some counting with multiBamCov
+samtools view -bt simple.chrom.sizes simple.sam > simple.bam
+samtools index simple.bam
+
+# now can run example command for text
+ multiBamCov -bams inputs/simple.bam -bed inputs/simple.bed
+
+# put this into a script that saves the output.
+
+
+# N.B.  the Kanute function findTestOutputs() scans scripts in TestFolder/tests for lines containing  'TEST_OUT_NAME='
+# 	and then uses whatever comes next as the target file name for the test. 
+# TODO make this scanning function more general for other scripting languages.
+#	OR add in another parameter file that links tests to test outputs.
+
+
+# TODO write equivalent tests for htseq-count
+# ls /opt/gridware/apps/htseq/0.5.3p3/bin/
+
