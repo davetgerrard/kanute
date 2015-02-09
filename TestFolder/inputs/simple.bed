@@ -1,0 +1,6 @@
+chrA	10	100	feature1	.	+
+chrA	10	100	feature2	.	-
+chrA	130	300	feature3	.	+
+chrA	500	600	feature4	.	-
+chrB	600	1000	feature5	.	+
+

@@ -3,3 +3,7 @@ bowtie-build tinyGenome.fa tinyGenome
 # module load apps/STAR/2.3.1z4
 #STAR --runMode genomeGenerate --genomeDir /mnt/fls01-home01/mqbssdgb/scratch/kanute/TestFolder/inputs/ --genomeFastaFiles tinyGenome.fa 
 # STAR index takes 1.5Gb, even for tinyGenome.
+
+# Create an indexed bam file to do some counting with multiBamCov
+samtools view -bt simple.chrom.sizes simple.sam > simple.bam 
+samtools index simple.bam 
